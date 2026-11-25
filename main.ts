@@ -26,14 +26,19 @@ function main(): void {
 
   mkdirSync("/output", { recursive: true });
   writeFileSync(OUT_PATH, JOKE, "utf8");
-  // Parent revision: verify the write round-tripped exactly — the grader
-  // reads this file, so a silent partial write must fail loudly here.
-  const written = readFileSync(OUT_PATH, "utf8");
-  if (written !== JOKE) {
-    throw new Error("entry.txt does not match the validated joke");
+  // Read the file straight back off disk and demand a byte-for-byte match
+  // against the validated joke: a truncated or corrupted write has to blow
+  // up here, not slip through to the grader.
+  const onDisk = readFileSync(OUT_PATH, "utf8");
+  if (onDisk !== JOKE) {
+    throw new Error(
+      `entry.txt mismatch: expected ${JOKE.length} characters, file holds ${onDisk.length}`,
+    );
   }
-  const bytes = Buffer.byteLength(JOKE, "utf8");
-  console.log(`wrote ${chars.length} characters (${bytes} bytes) to ${OUT_PATH}`);
+  const byteCount = Buffer.byteLength(onDisk, "utf8");
+  console.log(
+    `entry written and verified: ${[...onDisk].length} characters, ${byteCount} bytes -> ${OUT_PATH}`,
+  );
 }
 
 main();
