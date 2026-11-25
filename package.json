@@ -1,0 +1,1 @@
+{"description":"One original one-line joke about office life, written to /output/entry.txt for make.fun's Make the AI Judge Laugh bounty.","engines":{"node":">=22.18"},"license":"MIT","name":"judge-laugh-office-life","private":true,"type":"module","version":"1.0.0"}
